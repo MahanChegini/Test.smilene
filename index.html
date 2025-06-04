@@ -61,10 +61,21 @@
     .options button:hover {
       background-color: #d4d4d4;
     }
-    .result {
+    .result-container {
+      display: none;
+      flex-direction: column;
+      align-items: center;
       text-align: center;
-      margin-top: 2rem;
+      padding: 2rem;
+    }
+    .result-title {
+      font-size: 24px;
+      margin-bottom: 1rem;
+      color: #2c3e50;
+    }
+    .result-description {
       font-size: 18px;
+      color: #555;
     }
     @media (max-width: 600px) {
       .container {
@@ -77,12 +88,16 @@
   </style>
 </head>
 <body>
-<div class="container">
+<div class="container" id="main-container">
   <h1>تست شخصیت دکوراسیونی 🛋️</h1>
   <input type="text" id="username" placeholder="اول اسمتو بهم بگو...">
   <button onclick="startTest()">شروع تست باحال!</button>
   <div class="question" id="question-container" style="display:none;"></div>
-  <div class="result" id="result" style="display:none;"></div>
+</div>
+
+<div class="container result-container" id="result-container">
+  <div class="result-title" id="result-title"></div>
+  <div class="result-description" id="result-description"></div>
 </div>
 
 <script>
@@ -137,7 +152,7 @@
     shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
     currentQ = 0;
     score = 0;
-    document.getElementById("result").style.display = "none";
+    document.getElementById("main-container").style.display = "block";
     document.getElementById("question-container").style.display = "block";
     showQuestion();
   }
@@ -146,9 +161,10 @@
     if (currentQ >= 10) {
       const title = titles[score] || titles[0];
       const desc = descriptions[score] || descriptions[0];
-      document.getElementById("question-container").style.display = "none";
-      document.getElementById("result").innerHTML = `${userName} جانِ ${title}<br><small>${desc}</small>`;
-      document.getElementById("result").style.display = "block";
+      document.getElementById("main-container").style.display = "none";
+      document.getElementById("result-container").style.display = "flex";
+      document.getElementById("result-title").innerText = `${userName} جانِ ${title}`;
+      document.getElementById("result-description").innerText = desc;
       return;
     }
     const q = shuffled[currentQ];
