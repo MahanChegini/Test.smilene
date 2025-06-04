@@ -1,230 +1,173 @@
 <!DOCTYPE html>
-<html lang="fa">
+<html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>تست تخصصی دکوراسیون Smilene</title>
-<style>
-  @import url('https://cdn.jsdelivr.net/gh/rastikerdar/vazir-font@v30.1.0/dist/font-face.css');
-  body {
-    margin: 0; padding: 0; background: #f9f9f9; font-family: 'Vazir', sans-serif;
-    display: flex; justify-content: center; align-items: center; min-height: 100vh;
-    direction: rtl; color: #222;
-  }
-  .container {
-    background: #fff; max-width: 480px; width: 95%; padding: 25px 30px;
-    box-shadow: 0 15px 30px rgb(0 0 0 / 0.1);
-    border-radius: 14px; position: relative;
-  }
-  h1 {
-    text-align: center; font-weight: 700; font-size: 1.9rem; margin-bottom: 15px;
-    color: #4a4a4a;
-  }
-  .dice-btn {
-    display: block; margin: 0 auto 25px auto; padding: 12px 28px;
-    font-size: 1.25rem; background: #5c3a88; color: #fff; border: none;
-    border-radius: 8px; cursor: pointer; box-shadow: 0 4px 12px #5c3a88aa;
-    transition: background-color 0.3s ease;
-  }
-  .dice-btn:hover {
-    background-color: #462a69;
-  }
-  .question-box {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    min-height: 70px;
-  }
-  .options {
-    margin-top: 15px;
-    display: flex; flex-direction: column; gap: 12px;
-  }
-  label {
-    background: #e8e6f7;
-    padding: 12px 15px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: background 0.3s ease;
-  }
-  label:hover {
-    background: #d5d3f0;
-  }
-  input[type="radio"] {
-    display: none;
-  }
-  input[type="radio"]:checked + label {
-    background: #5c3a88;
-    color: #fff;
-  }
-  .next-btn {
-    margin-top: 20px;
-    background: #5c3a88; color: white;
-    border: none; padding: 12px 30px;
-    border-radius: 12px;
-    cursor: pointer;
-    font-size: 1.15rem;
-    box-shadow: 0 5px 15px #5c3a88aa;
-    transition: background-color 0.3s ease;
-  }
-  .next-btn:disabled {
-    background: #a398c5;
-    cursor: not-allowed;
-    box-shadow: none;
-  }
-  .next-btn:hover:enabled {
-    background-color: #462a69;
-  }
-  .result {
-    font-size: 1.4rem;
-    font-weight: 700;
-    text-align: center;
-    margin-top: 25px;
-    color: #3d2a61;
-    min-height: 80px;
-  }
-  /* المان معماری */
-  .corner-arch {
-    position: absolute;
-    width: 80px; height: 120px;
-    border: 5px solid #5c3a88;
-    border-bottom: none;
-    border-radius: 80px 80px 0 0;
-    opacity: 0.12;
-  }
-  .corner-arch.top-left {
-    top: -40px; left: -40px;
-  }
-  .corner-arch.bottom-right {
-    bottom: -40px; right: -40px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تست طراحی داخلی</title>
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background: #f3f4f6;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 95%;
+    }
+    h1, h2, h3 {
+      color: #333;
+      text-align: center;
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #222831;
+      color: white;
+      border: none;
+      border-radius: 8px;
+      margin-top: 1rem;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 1rem;
+      font-family: inherit;
+    }
+    .question {
+      margin-top: 2rem;
+    }
+    .options {
+      margin-top: 1rem;
+    }
+    .options button {
+      width: 100%;
+      margin-top: 0.5rem;
+      background-color: #eeeeee;
+      color: #222;
+    }
+    .options button:hover {
+      background-color: #d4d4d4;
+    }
+    .result {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 18px;
+    }
+    @media (max-width: 600px) {
+      .container {
+        padding: 1rem;
+      }
+      button, input {
+        font-size: 14px;
+      }
+    }
+  </style>
 </head>
 <body>
 <div class="container">
-  <div class="corner-arch top-left"></div>
-  <div class="corner-arch bottom-right"></div>
-  <h1>تست تخصصی دکوراسیون داخلی Smilene</h1>
-  <button class="dice-btn" id="rollDiceBtn">تاس بنداز و شروع کن</button>
-  
-  <div id="quizArea" style="display:none;">
-    <div class="question-box" id="questionText"></div>
-    <div class="options" id="optionsList"></div>
-    <button class="next-btn" id="nextBtn" disabled>بعدی</button>
-  </div>
-  
-  <div class="result" id="resultBox" style="display:none;"></div>
+  <h1>تست شخصیت دکوراسیونی 🛋️</h1>
+  <input type="text" id="username" placeholder="اول اسمتو بهم بگو...">
+  <button onclick="startTest()">شروع تست باحال!</button>
+  <div class="question" id="question-container" style="display:none;"></div>
+  <div class="result" id="result" style="display:none;"></div>
 </div>
 
 <script>
   const questions = [
-    {q: 'بهترین رنگ برای افزایش نور طبیعی در فضای کوچک چیست؟', options: ['سفید', 'سیاه', 'قرمز', 'آبی'], answer: 0},
-    {q: 'کدام متریال بیشتر برای سبک مدرن استفاده می‌شود؟', options: ['چوب طبیعی', 'شیشه و فلز', 'پارچه مخمل', 'سنگ مرمر'], answer: 1},
-    {q: 'تناسب بین مبلمان و فضای اتاق باید چگونه باشد؟', options: ['خیلی بزرگ نسبت به اتاق', 'خیلی کوچک نسبت به اتاق', 'متناسب و با اندازه درست', 'بدون اهمیت'], answer: 2},
-    {q: 'کدام سبک دکوراسیون به استفاده از خطوط ساده و اشکال هندسی معروف است؟', options: ['کلاسیک', 'مینیمال', 'روستیک', 'بوهمیان'], answer: 1},
-    {q: 'نورپردازی در دکوراسیون داخلی باید چگونه باشد؟', options: ['زیاد و مستقیم', 'کم و غیرمستقیم', 'فقط از چراغ‌های سقفی', 'فقط از لامپ‌های دیواری'], answer: 1},
-    {q: 'بهترین کفپوش برای مناطق پر رفت‌وآمد چیست؟', options: ['فرش دست‌بافت', 'پارکت چوبی', 'کاشی سرامیکی', 'موکت'], answer: 2},
-    {q: 'کدام رنگ به‌عنوان رنگ مکمل رنگ آبی شناخته می‌شود؟', options: ['نارنجی', 'سبز', 'زرد', 'خاکستری'], answer: 0},
-    {q: 'کدام متریال معمولاً در سبک روستیک استفاده می‌شود؟', options: ['فلز براق', 'چوب خام و سنگ', 'شیشه مات', 'پلاستیک'], answer: 1},
-    {q: 'کدام عنصر بیشتر به ایجاد حس راحتی کمک می‌کند؟', options: ['خطوط تیز', 'رنگ‌های سرد', 'بافت‌های نرم و طبیعی', 'نور خشن'], answer: 2},
-    {q: 'کدام سبک به استفاده از رنگ‌های متنوع و وسایل قدیمی معروف است؟', options: ['مدرن', 'بوهمیان', 'صنعتی', 'کلاسیک'], answer: 1}
+    { q: "برای اتاق نشیمن کدوم نورپردازی بهتره؟", a: "نور گرم و قابل تنظیم", options: ["نور سرد و سفید", "نور RGB چشمک‌زن", "نور گرم و قابل تنظیم"] },
+    { q: "کدوم متریال حس طبیعی بیشتری داره؟", a: "چوب طبیعی", options: ["پلاستیک", "چوب طبیعی", "شیشه"] },
+    { q: "رنگ مناسب اتاق خواب چیه؟", a: "آبی ملایم", options: ["قرمز تند", "آبی ملایم", "نارنجی"] },
+    { q: "در سبک مینیمال کدوم مهم‌تره؟", a: "مبل ساده با خطوط صاف", options: ["مبل کلاسیک با منبت", "مبل ساده با خطوط صاف", "مبل پر از کوسن"] },
+    { q: "برای بزرگ‌تر نشون دادن فضا چی خوبه؟", a: "آینه‌های بزرگ و نور طبیعی", options: ["فرش شلوغ", "آینه‌های بزرگ و نور طبیعی", "کاغذ دیواری تیره"] },
+    { q: "سبک بوهو چجوریه؟", a: "رنگ‌های گرم و طرح‌های قبیله‌ای", options: ["سفید و خاکستری ساده", "رنگ‌های گرم و طرح‌های قبیله‌ای", "کاملاً صنعتی"] },
+    { q: "ویژگی سبک اسکاندیناوی چیه؟", a: "سادگی و عملکردگرایی", options: ["زرق و برق زیاد", "سادگی و عملکردگرایی", "چیدمان شلوغ"] },
+    { q: "کدوم متریال برای صفحه کابینت خوبه؟", a: "سنگ کوارتز", options: ["چوب خام", "سنگ کوارتز", "پلاستیک"] },
+    { q: "استفاده از گیاه در طراحی چه تأثیری داره؟", a: "حس زندگی و تازگی میاره", options: ["فقط فضا رو شلوغ می‌کنه", "حس زندگی و تازگی میاره", "باعث جذب گرد و غبار میشه"] },
+    { q: "در طراحی صنعتی کدوم المان پررنگه؟", a: "بتن و فلز نمایان", options: ["کاشی‌کاری سنتی", "بتن و فلز نمایان", "چوب منبت‌کاری"] }
   ];
 
   const titles = [
-    "تازه‌کار دکوراسیون",
-    "تازه‌کار دکوراسیون",
-    "شاگرد طراح",
-    "کمک‌طراح",
-    "دستیار معمار",
-    "دکورچی حرفه‌ای",
-    "طراح جوان",
-    "معمار نوظهور",
-    "متخصص رنگ و نور",
-    "طراح ماهر و نوآور",
-    "استاد معماری داخلی Smilene"
+    "کارآموز کنجکاو 🎒",
+    "شاگرد طراح 🧰",
+    "استایلیست جوان 🎨",
+    "مینیمالیست آینده‌دار 🧱",
+    "جادوگر نورپردازی 💡",
+    "روح بوهو 🌈",
+    "معمار بافکر 📐",
+    "استاد چیدمان 🛋️",
+    "پادشاه پالت رنگ 👑",
+    "طراح افسانه‌ای ✨"
   ];
 
-  let selectedQuestions = [];
-  let currentIndex = 0;
+  const descriptions = [
+    "قراره باحال‌ترین طراحی‌ها رو ازت ببینیم، فقط عجله نکن!",
+    "یه روزی امضای خودتو پای طراحی‌ها می‌ذاری، ادامه بده!",
+    "استایلت داره شکل می‌گیره، وایسا تا ببینیم چی می‌شی!",
+    "تو طراحیِ کم ولی خاص استاد می‌شی!",
+    "فقط با یه نورپردازی ساده، فضا رو جادویی می‌کنی!",
+    "با یه پتو قبیله‌ای فضا رو به کارناوال تبدیل می‌کنی!",
+    "تو طراحی هر چیزی اول فکر می‌کنی بعد می‌چینی، عالیه!",
+    "چیدمان برات مثل شطرنجه، باهوش و دقیق!",
+    "رنگ‌ها باهات رفیق شدن، ترکیباتت بی‌نظیره!",
+    "حتی طراحای معروف هم دوست دارن ازت یاد بگیرن!"
+  ];
+
+  let userName = "";
+  let currentQ = 0;
   let score = 0;
+  let shuffled = [];
 
-  const rollDiceBtn = document.getElementById('rollDiceBtn');
-  const quizArea = document.getElementById('quizArea');
-  const questionText = document.getElementById('questionText');
-  const optionsList = document.getElementById('optionsList');
-  const nextBtn = document.getElementById('nextBtn');
-  const resultBox = document.getElementById('resultBox');
-
-  rollDiceBtn.addEventListener('click', () => {
-    startQuiz();
-  });
-
-  nextBtn.addEventListener('click', () => {
-    const selectedOption = document.querySelector('input[name="option"]:checked');
-    if (!selectedOption) return;
-    let answerIndex = Number(selectedOption.value);
-    if (answerIndex === selectedQuestions[currentIndex].answer) {
-      score++;
-    }
-    currentIndex++;
-    if (currentIndex < selectedQuestions.length) {
-      showQuestion(currentIndex);
-      nextBtn.disabled = true;
-    } else {
-      showResult();
-    }
-  });
-
-  function startQuiz() {
-    rollDiceBtn.style.display = 'none';
-    quizArea.style.display = 'block';
-    resultBox.style.display = 'none';
-
-    // انتخاب رندوم ۱۰ سوال از مجموعه سوالات
-    selectedQuestions = [];
-    let usedIndexes = new Set();
-    while (selectedQuestions.length < 10) {
-      let rand = Math.floor(Math.random() * questions.length);
-      if (!usedIndexes.has(rand)) {
-        usedIndexes.add(rand);
-        selectedQuestions.push(questions[rand]);
-      }
-    }
-
-    currentIndex = 0;
+  function startTest() {
+    const name = document.getElementById("username").value.trim();
+    if (!name) return alert("اسمتو بزن بریم!");
+    userName = name;
+    shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
+    currentQ = 0;
     score = 0;
-    showQuestion(currentIndex);
-    nextBtn.disabled = true;
+    document.getElementById("result").style.display = "none";
+    document.getElementById("question-container").style.display = "block";
+    showQuestion();
   }
 
-  function showQuestion(index) {
-    questionText.textContent = `سوال ${index + 1}: ${selectedQuestions[index].q}`;
-    optionsList.innerHTML = '';
-
-    selectedQuestions[index].options.forEach((opt, i) => {
-      const optionId = `option${i}`;
-      const optionHTML = `
-        <input type="radio" name="option" id="${optionId}" value="${i}" />
-        <label for="${optionId}">${opt}</label>
-      `;
-      optionsList.insertAdjacentHTML('beforeend', optionHTML);
+  function showQuestion() {
+    if (currentQ >= 10) {
+      const title = titles[score] || titles[0];
+      const desc = descriptions[score] || descriptions[0];
+      document.getElementById("question-container").style.display = "none";
+      document.getElementById("result").innerHTML = `${userName} جانِ ${title}<br><small>${desc}</small>`;
+      document.getElementById("result").style.display = "block";
+      return;
+    }
+    const q = shuffled[currentQ];
+    let optionsHtml = "";
+    q.options.forEach(opt => {
+      optionsHtml += `<button onclick="checkAnswer('${opt}', '${q.a}')">${opt}</button>`;
     });
-
-    // افزودن event به گزینه‌ها برای فعال کردن دکمه بعدی
-    const radios = document.querySelectorAll('input[name="option"]');
-    radios.forEach(radio => {
-      radio.addEventListener('change', () => {
-        nextBtn.disabled = false;
-      });
-    });
+    document.getElementById("question-container").innerHTML = `
+      <h3>${currentQ + 1}. ${q.q}</h3>
+      <div class="options">${optionsHtml}</div>
+    `;
   }
 
-  function showResult() {
-    quizArea.style.display = 'none';
-    resultBox.style.display = 'block';
-    resultBox.textContent = `شما ${score} از ۱۰ سوال را درست پاسخ دادید. لقب شما: ${titles[score]}`;
-    rollDiceBtn.textContent = "تست دوباره";
-    rollDiceBtn.style.display = 'block';
+  function checkAnswer(ans, correct) {
+    if (ans === correct) score++;
+    currentQ++;
+    showQuestion();
   }
 </script>
+<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn-font@latest/dist/font-face.css" rel="stylesheet">
 </body>
 </html>
