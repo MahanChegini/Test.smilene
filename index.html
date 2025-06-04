@@ -1,189 +1,243 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>تست طراحی داخلی</title>
+  <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn-font@latest/dist/font-face.css" rel="stylesheet" />
   <style>
     body {
       font-family: 'Vazirmatn', sans-serif;
-      background: #f3f4f6;
+      background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
       margin: 0;
       padding: 0;
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
+      color: #222831;
+      direction: rtl;
     }
     .container {
-      background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
-      max-width: 500px;
+      background: #ffffffdd;
+      padding: 2.5rem 3rem;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      max-width: 480px;
       width: 95%;
+      display: none;
+      transition: all 0.3s ease;
+    }
+    .active {
+      display: block;
     }
     h1, h2, h3 {
-      color: #333;
       text-align: center;
+      margin-bottom: 1.2rem;
+      color: #222831;
+    }
+    input#username {
+      width: 100%;
+      padding: 14px 16px;
+      font-size: 18px;
+      border-radius: 10px;
+      border: 2px solid #ccc;
+      transition: border-color 0.3s ease;
+      outline: none;
+    }
+    input#username:focus {
+      border-color: #66a6ff;
+      box-shadow: 0 0 8px #66a6ffaa;
     }
     button {
       width: 100%;
-      padding: 12px;
+      padding: 14px;
       background: #222831;
       color: white;
       border: none;
-      border-radius: 8px;
-      margin-top: 1rem;
-      font-size: 16px;
+      border-radius: 12px;
+      margin-top: 1.5rem;
+      font-size: 18px;
+      font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 5px 10px #00000044;
+      transition: background-color 0.3s ease;
     }
-    input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      margin-top: 1rem;
-      font-family: inherit;
-    }
-    .question {
-      margin-top: 2rem;
-    }
-    .options {
-      margin-top: 1rem;
+    button:hover {
+      background-color: #393e46;
     }
     .options button {
-      width: 100%;
-      margin-top: 0.5rem;
       background-color: #eeeeee;
-      color: #222;
+      color: #222831;
+      margin-top: 0.6rem;
+      font-weight: 600;
+      box-shadow: 0 3px 8px #ccc;
+      transition: background-color 0.25s ease, transform 0.2s ease;
     }
     .options button:hover {
-      background-color: #d4d4d4;
+      background-color: #c5d9ff;
+      transform: scale(1.05);
     }
-    .result-container {
-      display: none;
-      flex-direction: column;
-      align-items: center;
+    .result-page {
       text-align: center;
-      padding: 2rem;
+      padding-top: 1rem;
+      color: #222831;
+    }
+    .celebration {
+      font-size: 60px;
+      margin-bottom: 1rem;
+      animation: pop 1.2s ease forwards;
+    }
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 0; }
+      70% { transform: scale(1.2); opacity: 1; }
+      100% { transform: scale(1); }
     }
     .result-title {
-      font-size: 24px;
-      margin-bottom: 1rem;
-      color: #2c3e50;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #0f3460;
     }
     .result-description {
       font-size: 18px;
-      color: #555;
+      margin-bottom: 1rem;
+      color: #16213e;
+      line-height: 1.5;
     }
-    @media (max-width: 600px) {
-      .container {
-        padding: 1rem;
-      }
-      button, input {
-        font-size: 14px;
-      }
+    .score-summary {
+      font-size: 17px;
+      font-weight: 600;
+      color: #53354a;
+      background: #e0c3fc;
+      padding: 12px 20px;
+      border-radius: 14px;
+      margin-bottom: 1.8rem;
+      box-shadow: 0 4px 12px #b395ff66;
     }
   </style>
 </head>
 <body>
-<div class="container" id="main-container">
-  <h1>تست شخصیت دکوراسیونی 🛋️</h1>
-  <input type="text" id="username" placeholder="اول اسمتو بهم بگو...">
-  <button onclick="startTest()">شروع تست باحال!</button>
-  <div class="question" id="question-container" style="display:none;"></div>
-</div>
+  <div class="container welcome active" id="welcome">
+    <h1>تست شخصیت دکوراسیونی 🛋️</h1>
+    <input type="text" id="username" placeholder="اسم خودت رو اینجا بنویس..." />
+    <button onclick="startTest()">شروع تست باحال!</button>
+  </div>
 
-<div class="container result-container" id="result-container">
-  <div class="result-title" id="result-title"></div>
-  <div class="result-description" id="result-description"></div>
-</div>
+  <div class="container quiz" id="quiz">
+    <div id="question-container"></div>
+  </div>
 
-<script>
-  const questions = [
-    { q: "برای اتاق نشیمن کدوم نورپردازی بهتره؟", a: "نور گرم و قابل تنظیم", options: ["نور سرد و سفید", "نور RGB چشمک‌زن", "نور گرم و قابل تنظیم"] },
-    { q: "کدوم متریال حس طبیعی بیشتری داره؟", a: "چوب طبیعی", options: ["پلاستیک", "چوب طبیعی", "شیشه"] },
-    { q: "رنگ مناسب اتاق خواب چیه؟", a: "آبی ملایم", options: ["قرمز تند", "آبی ملایم", "نارنجی"] },
-    { q: "در سبک مینیمال کدوم مهم‌تره؟", a: "مبل ساده با خطوط صاف", options: ["مبل کلاسیک با منبت", "مبل ساده با خطوط صاف", "مبل پر از کوسن"] },
-    { q: "برای بزرگ‌تر نشون دادن فضا چی خوبه؟", a: "آینه‌های بزرگ و نور طبیعی", options: ["فرش شلوغ", "آینه‌های بزرگ و نور طبیعی", "کاغذ دیواری تیره"] },
-    { q: "سبک بوهو چجوریه؟", a: "رنگ‌های گرم و طرح‌های قبیله‌ای", options: ["سفید و خاکستری ساده", "رنگ‌های گرم و طرح‌های قبیله‌ای", "کاملاً صنعتی"] },
-    { q: "ویژگی سبک اسکاندیناوی چیه؟", a: "سادگی و عملکردگرایی", options: ["زرق و برق زیاد", "سادگی و عملکردگرایی", "چیدمان شلوغ"] },
-    { q: "کدوم متریال برای صفحه کابینت خوبه؟", a: "سنگ کوارتز", options: ["چوب خام", "سنگ کوارتز", "پلاستیک"] },
-    { q: "استفاده از گیاه در طراحی چه تأثیری داره؟", a: "حس زندگی و تازگی میاره", options: ["فقط فضا رو شلوغ می‌کنه", "حس زندگی و تازگی میاره", "باعث جذب گرد و غبار میشه"] },
-    { q: "در طراحی صنعتی کدوم المان پررنگه؟", a: "بتن و فلز نمایان", options: ["کاشی‌کاری سنتی", "بتن و فلز نمایان", "چوب منبت‌کاری"] }
-  ];
+  <div class="container result-page" id="result-page">
+    <div class="celebration">🎉</div>
+    <h2 class="result-title" id="final-title"></h2>
+    <p class="score-summary" id="score-summary"></p>
+    <p class="result-description" id="final-description"></p>
+    <button onclick="restart()">شروع دوباره</button>
+  </div>
 
-  const titles = [
-    "کارآموز کنجکاو 🎒",
-    "شاگرد طراح 🧰",
-    "استایلیست جوان 🎨",
-    "مینیمالیست آینده‌دار 🧱",
-    "جادوگر نورپردازی 💡",
-    "روح بوهو 🌈",
-    "معمار بافکر 📐",
-    "استاد چیدمان 🛋️",
-    "پادشاه پالت رنگ 👑",
-    "طراح افسانه‌ای ✨"
-  ];
+  <script>
+    const questions = [
+      { q: "برای اتاق نشیمن کدوم نورپردازی بهتره؟", a: "نور گرم و قابل تنظیم", options: ["نور سرد و سفید", "نور RGB چشمک‌زن", "نور گرم و قابل تنظیم"] },
+      { q: "کدوم متریال حس طبیعی بیشتری داره؟", a: "چوب طبیعی", options: ["پلاستیک", "چوب طبیعی", "شیشه"] },
+      { q: "رنگ مناسب اتاق خواب چیه؟", a: "آبی ملایم", options: ["قرمز تند", "آبی ملایم", "نارنجی"] },
+      { q: "در سبک مینیمال کدوم مهم‌تره؟", a: "مبل ساده با خطوط صاف", options: ["مبل کلاسیک با منبت", "مبل ساده با خطوط صاف", "مبل پر از کوسن"] },
+      { q: "برای بزرگ‌تر نشون دادن فضا چی خوبه؟", a: "آینه‌های بزرگ و نور طبیعی", options: ["فرش شلوغ", "آینه‌های بزرگ و نور طبیعی", "کاغذ دیواری تیره"] },
+      { q: "سبک بوهو چجوریه؟", a: "رنگ‌های گرم و طرح‌های قبیله‌ای", options: ["سفید و خاکستری ساده", "رنگ‌های گرم و طرح‌های قبیله‌ای", "کاملاً صنعتی"] },
+      { q: "ویژگی سبک اسکاندیناوی چیه؟", a: "سادگی و عملکردگرایی", options: ["زرق و برق زیاد", "سادگی و عملکردگرایی", "چیدمان شلوغ"] },
+      { q: "کدوم متریال برای صفحه کابینت خوبه؟", a: "سنگ کوارتز", options: ["چوب خام", "سنگ کوارتز", "پلاستیک"] },
+      { q: "استفاده از گیاه در طراحی چه تأثیری داره؟", a: "حس زندگی و تازگی میاره", options: ["فقط فضا رو شلوغ می‌کنه", "حس زندگی و تازگی میاره", "باعث جذب گرد و غبار میشه"] },
+      { q: "در طراحی صنعتی کدوم المان پررنگه؟", a: "بتن و فلز نمایان", options: ["کاشی‌کاری سنتی", "بتن و فلز نمایان", "چوب منبت‌کاری"] }
+    ];
 
-  const descriptions = [
-    "قراره باحال‌ترین طراحی‌ها رو ازت ببینیم، فقط عجله نکن!",
-    "یه روزی امضای خودتو پای طراحی‌ها می‌ذاری، ادامه بده!",
-    "استایلت داره شکل می‌گیره، وایسا تا ببینیم چی می‌شی!",
-    "تو طراحیِ کم ولی خاص استاد می‌شی!",
-    "فقط با یه نورپردازی ساده، فضا رو جادویی می‌کنی!",
-    "با یه پتو قبیله‌ای فضا رو به کارناوال تبدیل می‌کنی!",
-    "تو طراحی هر چیزی اول فکر می‌کنی بعد می‌چینی، عالیه!",
-    "چیدمان برات مثل شطرنجه، باهوش و دقیق!",
-    "رنگ‌ها باهات رفیق شدن، ترکیباتت بی‌نظیره!",
-    "حتی طراحای معروف هم دوست دارن ازت یاد بگیرن!"
-  ];
+    const titles = [
+      "کارآموز کنجکاو 🎒",
+      "شاگرد طراح 🧰",
+      "استایلیست جوان 🎨",
+      "مینیمالیست آینده‌دار 🧱",
+      "جادوگر نورپردازی 💡",
+      "روح بوهو 🌈",
+      "معمار بافکر 📐",
+      "استاد چیدمان 🛋️",
+      "پادشاه پالت رنگ 👑",
+      "طراح افسانه‌ای ✨"
+    ];
 
-  let userName = "";
-  let currentQ = 0;
-  let score = 0;
-  let shuffled = [];
+    const descriptions = [
+      "قراره باحال‌ترین طراحی‌ها رو ازت ببینیم، فقط عجله نکن!",
+      "یه روزی امضای خودتو پای طراحی‌ها می‌ذاری، ادامه بده!",
+      "استایلت داره شکل می‌گیره، وایسا تا ببینیم چی می‌شی!",
+      "تو طراحیِ کم ولی خاص استاد می‌شی!",
+      "فقط با یه نورپردازی ساده، فضا رو جادویی می‌کنی!",
+      "با یه پتو قبیله‌ای فضا رو به کارناوال تبدیل می‌کنی!",
+      "تو طراحی هر چیزی اول فکر می‌کنی بعد می‌چینی، عالیه!",
+      "چیدمان برات مثل شطرنجه، باهوش و دقیق!",
+      "رنگ‌ها باهات رفیق شدن، ترکیباتت بی‌نظیره!",
+      "حتی طراحای معروف هم دوست دارن ازت یاد بگیرن!"
+    ];
 
-  function startTest() {
-    const name = document.getElementById("username").value.trim();
-    if (!name) return alert("اسمتو بزن بریم!");
-    userName = name;
-    shuffled = questions.sort(() => 0.5 - Math.random()).slice(0, 10);
-    currentQ = 0;
-    score = 0;
-    document.getElementById("main-container").style.display = "block";
-    document.getElementById("question-container").style.display = "block";
-    showQuestion();
-  }
+    let userName = "";
+    let currentQ = 0;
+    let score = 0;
+    let shuffled = [];
 
-  function showQuestion() {
-    if (currentQ >= 10) {
+    function startTest() {
+      const name = document.getElementById("username").value.trim();
+      if (!name) {
+        alert("لطفاً اسمت رو وارد کن تا تست شروع بشه!");
+        return;
+      }
+      userName = name;
+      shuffled = [...questions].sort(() => 0.5 - Math.random()).slice(0, 10);
+      currentQ = 0;
+      score = 0;
+
+      document.getElementById("welcome").classList.remove("active");
+      document.getElementById("result-page").classList.remove("active");
+      document.getElementById("quiz").classList.add("active");
+
+      showQuestion();
+    }
+
+    function showQuestion() {
+      if (currentQ >= 10) {
+        showResult();
+        return;
+      }
+      const q = shuffled[currentQ];
+      let optionsHtml = "";
+      q.options.forEach(opt => {
+        optionsHtml += `<button onclick="checkAnswer('${opt}', '${q.a}')">${opt}</button>`;
+      });
+      document.getElementById("question-container").innerHTML = `
+        <h3>${currentQ + 1}. ${q.q}</h3>
+        <div class="options">${optionsHtml}</div>
+      `;
+    }
+
+    function checkAnswer(ans, correct) {
+      if (ans === correct) score++;
+      currentQ++;
+      showQuestion();
+    }
+
+    function showResult() {
       const title = titles[score] || titles[0];
       const desc = descriptions[score] || descriptions[0];
-      document.getElementById("main-container").style.display = "none";
-      document.getElementById("result-container").style.display = "flex";
-      document.getElementById("result-title").innerText = `${userName} جانِ ${title}`;
-      document.getElementById("result-description").innerText = desc;
-      return;
-    }
-    const q = shuffled[currentQ];
-    let optionsHtml = "";
-    q.options.forEach(opt => {
-      optionsHtml += `<button onclick="checkAnswer('${opt}', '${q.a}')">${opt}</button>`;
-    });
-    document.getElementById("question-container").innerHTML = `
-      <h3>${currentQ + 1}. ${q.q}</h3>
-      <div class="options">${optionsHtml}</div>
-    `;
-  }
 
-  function checkAnswer(ans, correct) {
-    if (ans === correct) score++;
-    currentQ++;
-    showQuestion();
-  }
-</script>
-<link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn-font@latest/dist/font-face.css" rel="stylesheet">
+      document.getElementById("quiz").classList.remove("active");
+      document.getElementById("result-page").classList.add("active");
+
+      document.getElementById("final-title").innerText = `${userName} جان، تو ${title} هستی!`;
+      document.getElementById("score-summary").innerText = `تو از ۱۰ سوال، ${score} سوال رو درست جواب دادی. عالی بود!`;
+      document.getElementById("final-description").innerText = desc;
+    }
+
+    function restart() {
+      document.getElementById("result-page").classList.remove("active");
+      document.getElementById("welcome").classList.add("active");
+      document.getElementById("username").value = "";
+    }
+  </script>
 </body>
 </html>
